@@ -42,7 +42,11 @@ admin.site.register(OfficeTable)
 
 admin.site.register(WorkCodeTable)
 
-admin.site.register(WorkDetailCodeTable)
+'''作業内容の定義'''
+class WorkDetailCodeModelAdmin(admin.ModelAdmin):
+    list_display = ('work_detail_code', 'contents')
+
+admin.site.register(WorkDetailCodeTable, WorkDetailCodeModelAdmin)
 
 admin.site.register(WorkTable)
 

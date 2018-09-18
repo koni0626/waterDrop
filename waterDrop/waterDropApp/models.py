@@ -75,8 +75,16 @@ class WorkCodeTable(models.Model):
 作業内容テーブル
 '''
 class WorkDetailCodeTable(models.Model):
-    work_detail_code = models.CharField(max_length=32, primary_key=True, null=False)
-    contents = models.CharField(max_length=512)
+    class Meta:
+        verbose_name = "作業内容"
+        verbose_name_plural = "作業内容"
+
+    dummy_id = models.AutoField(primary_key=True)
+    work_detail_code = models.CharField(max_length=32, unique=True, null=False, verbose_name="作業コード")
+    contents = models.CharField(max_length=512, verbose_name="作業内容の説明")
+
+    def __str__(self):
+        return self.work_detail_code
 
 '''
 作業テーブル
