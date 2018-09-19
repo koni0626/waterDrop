@@ -18,7 +18,6 @@ def main(request):
 '''
 ログイン画面表示
 '''
-#@login_required
 def login(request):
     print("hello login")
     return render(request, 'waterDropApp/login.html',{})

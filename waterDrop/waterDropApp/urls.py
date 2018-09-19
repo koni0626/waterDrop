@@ -6,6 +6,6 @@ admin.site.site_header = 'ウォータードロップ'
 admin.site.index_title = 'メニュー'
 
 urlpatterns = [
-    path('', views.login, name='login'),
+    path('', views.main, name='main'),
     path('waterDropApp/', views.main, name='main'),
 ]
