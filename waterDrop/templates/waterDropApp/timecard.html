@@ -20,7 +20,7 @@
 <body>
     <center>
         <h1>タイムカード</h1>
-    <form action="timeCard/" method="post">
+    <form action="/timeCardEntry/" method="post">
         {%csrf_token%}
         {{form.username}}<br>
         {{form.date}}<br>

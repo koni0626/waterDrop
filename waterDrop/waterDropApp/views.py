@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import TimeCardTable
-from django.contrib.auth.models import User
+from .models import TimeCardTable, User
+#from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from . import forms
 from django.utils import timezone
@@ -29,37 +29,46 @@ def login(request):
 '''
 @login_required
 def timeCard(request):
+    '''表示オンリー'''
+    try:
+        '''現在日時を取得する'''
+        nowDate = timezone.localtime().strftime("%Y-%m-%d")
+        '''ここをユーザー名指定にしないとやばい'''
+        record = TimeCardTable.objects.get(date=nowDate)
+        inTime = record.getInTime()[0:5]
+        offTime = record.getOffTime()[0:5]
+        if inTime != "None":
+           offTime = timezone.localtime().strftime("%H:%M")
+    except TimeCardTable.DoesNotExist:
+        '''まだ未入力なので現在時刻を出社時刻に設定する'''
+        inTime = timezone.localtime().strftime("%H:%M")
+
+    form = forms.TimeCardForm(initial={'inTime': inTime, 'offTime': offTime,
+                                       'username': request.user.username,
+                                       'date': nowDate})
+
+    return render(request, 'waterDropApp/timecard.html', {"form": form})
+
+'''
+出退勤時間を登録する
+'''
+def timeCardEntry(request):
     offTime = ""
     inTime = ""
     if request.method == "POST":
         '''出社時間、退社時間を登録'''
         form = forms.TimeCardForm(request.POST)
         if form.is_valid():
-            '正しい'
-            print(form.cleaned_data['date'])
-            print(form.cleaned_data['username'])
-            print(form.cleaned_data['inTime'])
-            print(form.cleaned_data['offTime'])
+            '''ユーザテーブルからユーザIDを取得する'''
+            username = form.cleaned_data['username']
+            employee_id = User.objects.get(username=username)
+
+            '''日付とユーザIDからタイムカードの主キーを取得する'''
+            pk = TimeCardTable.objects.get(date=form.cleaned_data['date'], employee_id=employee_id)
+            print(pk.id)
+            TimeCardTable(id = pk.id, employee_id = employee_id, date = form.cleaned_data['date'],
+                          inTime=form.cleaned_data['inTime'], offTime = form.cleaned_data['offTime']).save()
         else:
             '間違い'
-            pass
-    else:
-        '''表示オンリー'''
-        try:
-            '''現在日時を取得する'''
-            nowDate = timezone.localtime().strftime("%Y-%m-%d")
-            '''ここをユーザー名指定にしないとやばい'''
-            record = TimeCardTable.objects.get(day=nowDate)
-            inTime = record.getInTime()[0:5]
-            offTime = record.getOffTime()[0:5]
-            if inTime != "None":
-                offTime = timezone.localtime().strftime("%H:%M")
-        except TimeCardTable.DoesNotExist:
-            '''まだ未入力なので現在時刻を出社時刻に設定する'''
-            inTime = timezone.localtime().strftime("%H:%M")
-
-        form = forms.TimeCardForm(initial={'inTime': inTime, 'offTime': offTime,
-                                           'username': request.user.username,
-                                           'date': nowDate})
-
-    return render(request, 'waterDropApp/timecard.html', {"form": form})
+            print("error happen")
+    return render(request, 'waterDropApp/timecard_entry.html')

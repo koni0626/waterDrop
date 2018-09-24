@@ -2,11 +2,20 @@
 
 from django import forms
 from django.contrib.admin import widgets
+from django.forms import ModelForm
+from .models import TimeCardTable
 
-'''タイムカード入力フォーム'''
+'''タイムカード入力フォームボツ'''
+class TimeCardFormBotu(ModelForm):
+    class Meta:
+        model = TimeCardTable
+        fields = ['date', 'employee_id', 'inTime', 'offTime']
+
+
 class TimeCardForm(forms.Form):
     '''初期値の設定はViewで行う'''
     username = forms.CharField(widget=forms.HiddenInput)
     date = forms.DateField(widget=forms.HiddenInput)
-    inTime = forms.TimeField(widget=widgets.AdminTimeWidget)
-    offTime = forms.TimeField(widget=widgets.AdminTimeWidget)
+    #AdminTimeWidgetはイマイチ使えないので自作する
+    inTime = forms.TimeField()
+    offTime = forms.TimeField(required=False)

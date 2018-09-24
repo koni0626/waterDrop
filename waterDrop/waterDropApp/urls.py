@@ -8,5 +8,6 @@ admin.site.index_title = 'メニュー'
 urlpatterns = [
     path('', views.timeCard, name='timeCard'),
     path('timeCard/', views.timeCard, name='timeCard'),
+    path('timeCardEntry/', views.timeCardEntry, name='timeCardEntry'),
     path('waterDropApp/', views.main, name='main'),
 ]

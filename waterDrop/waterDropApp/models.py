@@ -48,20 +48,20 @@ class User(AbstractUser):
 class TimeCardTable(models.Model):
     '''このテーブルは別のページで編集できるようにする'''
     class Meta:
-        verbose_name = "タイムカード"
+        verbose_name = 'タイムカード'
         verbose_name_plural = 'タイムカード'
 
     id = models.BigAutoField(primary_key=True, null=False)
-    day = models.DateField(null=False, unique=True)
-    employ_id = models.ForeignKey(User, on_delete=models.CASCADE, null=False, verbose_name="社員番号")
+    date = models.DateField(null=False, unique=True)
+    employee_id = models.ForeignKey(User, on_delete=models.CASCADE, null=False, verbose_name="社員番号")
     inTime = models.TimeField(verbose_name="出社時間", null=True, blank=True)
     offTime = models.TimeField(verbose_name="退社時間", null=True, blank=True)
 
     def __str__(self):
-        return str(self.day)
+        return str(self.date)
 
     def getEmployeeid(self):
-        return str(self.employ_id)
+        return str(self.employee_id)
 
     def getInTime(self):
         return str(self.inTime)
