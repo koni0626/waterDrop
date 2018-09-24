@@ -52,13 +52,22 @@ class TimeCardTable(models.Model):
         verbose_name_plural = 'タイムカード'
 
     id = models.BigAutoField(primary_key=True, null=False)
-    day = models.DateField(null=False)
+    day = models.DateField(null=False, unique=True)
     employ_id = models.ForeignKey(User, on_delete=models.CASCADE, null=False, verbose_name="社員番号")
-    start = models.TimeField(verbose_name="出社時間")
-    end = models.TimeField(verbose_name="退社時間")
+    inTime = models.TimeField(verbose_name="出社時間", null=True, blank=True)
+    offTime = models.TimeField(verbose_name="退社時間", null=True, blank=True)
 
     def __str__(self):
         return str(self.day)
+
+    def getEmployeeid(self):
+        return str(self.employ_id)
+
+    def getInTime(self):
+        return str(self.inTime)
+
+    def getOffTime(self):
+        return str(self.offTime)
 
 '''
 作番テーブル

@@ -6,22 +6,6 @@
   </head>
 <body>
     {% block content %}
-        <table border="1">
-        <tr>
-           <th>ユーザ名</th>
-           <th>出勤時刻</th>
-           <th>退勤時刻</th>
-           <th>備考</th>
-        </tr>
-        {% for record in attendTable %}
-            <tr>
-                <td>{{ record.full_name }}</td>
-                <td>{{ record.startDate }}</td>
-                <td>{{ record.endDate }}</td>
-                <td>特になし</td>
-            </tr>
-            {% endfor %}
-        </table>
     {% endblock %}
 </body>
 </html>
