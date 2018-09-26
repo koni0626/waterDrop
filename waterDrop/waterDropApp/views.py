@@ -30,6 +30,9 @@ def login(request):
 @login_required
 def timeCard(request):
     '''表示オンリー'''
+    inTime = ""
+    offTime = ""
+
     try:
         '''現在日時を取得する'''
         nowDate = timezone.localtime().strftime("%Y-%m-%d")
