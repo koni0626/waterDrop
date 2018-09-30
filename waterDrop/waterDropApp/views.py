@@ -5,7 +5,7 @@ from .models import TimeCardTable, User
 from django.contrib.auth.decorators import login_required
 from . import forms
 from django.utils import timezone
-from waterDrop import settings
+from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 
 '''
@@ -86,5 +86,6 @@ def mail(request):
     recipient_list = [
         "konickcioc@gmail.com"
     ]
+    print(from_email)
     send_mail(subject, message, from_email, recipient_list)
     return render(request, 'waterDropApp/mail.html')
