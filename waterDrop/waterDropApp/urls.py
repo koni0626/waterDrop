@@ -10,4 +10,5 @@ urlpatterns = [
     path('timeCard/', views.timeCard, name='timeCard'),
     path('timeCardEntry/', views.timeCardEntry, name='timeCardEntry'),
     path('waterDropApp/', views.main, name='main'),
+    path('mail/', views.mail, name="mail"),
 ]

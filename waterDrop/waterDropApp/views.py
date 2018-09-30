@@ -5,6 +5,8 @@ from .models import TimeCardTable, User
 from django.contrib.auth.decorators import login_required
 from . import forms
 from django.utils import timezone
+from waterDrop import settings
+from django.core.mail import send_mail, EmailMessage
 
 '''
 ログインに関してはここが役に立つ
@@ -72,3 +74,14 @@ def timeCardEntry(request):
             '間違い'
             print("error happen")
     return render(request, 'waterDropApp/timecard_entry.html')
+
+'''メール送信テスト'''
+def mail(request):
+    subject = "題名"
+    message = "本文\\nです"
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [
+        "konickcioc@gmail.com"
+    ]
+    send_mail(subject, message, from_email, recipient_list)
+    return render(request, 'waterDropApp/mail.html')
