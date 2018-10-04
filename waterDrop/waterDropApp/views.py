@@ -60,6 +60,7 @@ def timeCard(request):
 def timeCardEntry(request):
     offTime = ""
     inTime = ""
+    status = "success"
     if request.method == "POST":
         '''出社時間、退社時間を登録'''
         form = forms.TimeCardForm(request.POST)
@@ -67,16 +68,21 @@ def timeCardEntry(request):
             '''ユーザテーブルからユーザIDを取得する'''
             username = form.cleaned_data['username']
             employee_id = User.objects.get(username=username)
-
-            '''日付とユーザIDからタイムカードの主キーを取得する'''
-            pk = TimeCardTable.objects.get(date=form.cleaned_data['date'], employee_id=employee_id)
-            print(pk.id)
-            TimeCardTable(id = pk.id, employee_id = employee_id, date = form.cleaned_data['date'],
-                          inTime=form.cleaned_data['inTime'], offTime = form.cleaned_data['offTime']).save()
+            try:
+                '''日付とユーザIDからタイムカードの主キーを取得する'''
+                pk = TimeCardTable.objects.get(date=form.cleaned_data['date'], employee_id=employee_id)
+                print(pk.id)
+                TimeCardTable(id = pk.id, employee_id = employee_id, date = form.cleaned_data['date'],
+                            inTime=form.cleaned_data['inTime'], offTime = form.cleaned_data['offTime']).save()
+            except TimeCardTable.DoesNotExist as e:
+                '''レコードがない場合は，出社時間とみなす'''
+                TimeCardTable(employee_id = employee_id, date = form.cleaned_data['date'],
+                            inTime=form.cleaned_data['inTime'], offTime = form.cleaned_data['offTime']).save()
         else:
-            '間違い'
-            print("error happen")
-    return render(request, 'waterDropApp/timecard_entry.html')
+            '''データの形式が不正'''
+            status = "error"
+
+    return render(request, 'waterDropApp/timecard_entry.html', {"status" : status})
 
 '''メール送信テスト'''
 def mail(request):

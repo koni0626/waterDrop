@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
+{% if status == "normal" %}
 受け付けました
+{% else %}
+入力した文字が不正です
+{% endif %}
 </body>
 </html>
