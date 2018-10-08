@@ -34,16 +34,19 @@ def timeCard(request):
     '''表示オンリー'''
     inTime = ""
     offTime = ""
-
     try:
-        '''現在日時を取得する'''
-        nowDate = timezone.localtime().strftime("%Y-%m-%d")
-        '''ここをユーザー名指定にしないとやばい'''
-        record = TimeCardTable.objects.get(date=nowDate)
-        inTime = record.getInTime()[0:5]
-        offTime = record.getOffTime()[0:5]
-        if inTime != "None":
-           offTime = timezone.localtime().strftime("%H:%M")
+        employee_id = request.user.id
+        '''社員情報の今月のデータを取得する'''
+        nowDate = timezone.localtime()
+        year = nowDate.strftime("%Y")
+        month = nowDate.strftime("%m")
+        day = nowDate.strftime("%d")
+        records = TimeCardTable.objects.filter(employee_id=employee_id, date__year=year, date__month=month)
+        print("きてるよ")
+#        inTime = record.getInTime()[0:5]
+#        offTime = record.getOffTime()[0:5]
+#        if inTime != "None":
+#           offTime = timezone.localtime().strftime("%H:%M")
     except TimeCardTable.DoesNotExist:
         '''まだ未入力なので現在時刻を出社時刻に設定する'''
         inTime = timezone.localtime().strftime("%H:%M")
@@ -52,7 +55,7 @@ def timeCard(request):
                                        'username': request.user.username,
                                        'date': nowDate})
 
-    return render(request, 'waterDropApp/timecard.html', {"form": form})
+    return render(request, 'waterDropApp/newentry.html', {"form": form, "records":records, "year":year, "month":month})
 
 '''
 出退勤時間を登録する
@@ -80,6 +83,7 @@ def timeCardEntry(request):
                             inTime=form.cleaned_data['inTime'], offTime = form.cleaned_data['offTime']).save()
         else:
             '''データの形式が不正'''
+            print("timeCartEntry error")
             status = "error"
 
     return render(request, 'waterDropApp/timecard_entry.html', {"status" : status})

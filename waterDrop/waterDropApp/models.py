@@ -39,6 +39,7 @@ class User(AbstractUser):
         verbose_name = "社員情報"
         verbose_name_plural = '社員情報'
 
+
     kaCode = models.ForeignKey(KaTable, on_delete=models.CASCADE, null=True, verbose_name="課コード", help_text="所属課を選択してください")
 
 

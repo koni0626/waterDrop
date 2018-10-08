@@ -5,12 +5,6 @@ from django.contrib.admin import widgets
 from django.forms import ModelForm
 from .models import TimeCardTable
 
-'''タイムカード入力フォームボツ'''
-class TimeCardFormBotu(ModelForm):
-    class Meta:
-        model = TimeCardTable
-        fields = ['date', 'employee_id', 'inTime', 'offTime']
-
 
 class TimeCardForm(forms.Form):
     '''初期値の設定はViewで行う'''

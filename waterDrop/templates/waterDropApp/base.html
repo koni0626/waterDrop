@@ -3,78 +3,49 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>waterDrop</title>
-    <style>
-    #footer{
-    background-color: #aaa;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    color : #fff;
-    margin-top:30px;
-    }
-    </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width-device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <title>WaterDrop</title>
 </head>
 <body>
-
-<div class="container">
-
-    <!-- navbar -->
-    <div class="row">
-        <nav class="navbar navbar-default navbar-fixed-top">
-
-            <div class="navbar-header">
-                <a href="" class="navbar-brand">Home</a>
+<!--
+    <h1 class="text-success">{% static 'css/bootstrap.css' %}</h1>
+-->
+    <div class="container">
+        <!-- ここにコンテンツを入れる -->
+        <!--ヘッダー -->
+        <div class="row">
+            <div class="col alert alert-info">
+                <h1>WaterDrop</h1>出退勤管理システム
             </div>
-
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="">menu1</a></li>
-                <li><a href="">menu2</a></li>
-                <li><a href="">menu3</a></li>
-                <li><a href="">menu4</a></li>
-            </ul>
-
-        </nav>
-    </div>
-
-    <!-- content -->
-    <div class="row" style="padding:80px 0 0 0">
-
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Menu
-                </div>
-                <!-- <div class="panel-body"> -->
-                <ul class="nav nav-pills nav-stacked" >
-                    <li><a href=""><i class="glyphicon glyphicon-pencil"></i> submenu1</a></li>
-                    <li><a href=""><i class="glyphicon glyphicon-download"></i> submenu2</a></li>
-                    <li><a href=""><i class="glyphicon glyphicon-leaf"></i> submenu3</a></li>
-                    <li><a href=""><i class="glyphicon glyphicon-folder-open"></i> submenu4</a></li>
+        </div>
+        <!--メニュー -->
+        <div class="row">
+            <div class="col-2">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-action list-group-item-info">メニュー</li>
+                    <li class="list-group-item list-group-item-action">タイムカード</li>
+                    <li class="list-group-item list-group-item-action">出退勤一覧</li>
+                    <li class="list-group-item list-group-item-action">カレンダー</li>
+                    <li class="list-group-item list-group-item-action">交通費申請</li>
+                    <li class="list-group-item list-group-item-action">ログイン</li>
+                    <li class="list-group-item list-group-item-action">ログアウト</li>
                 </ul>
-                <!-- </div> -->
+                <br>
+            </div>
+            <div class="col">
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
 
-        <!-- main -->
-        <div class="col-md-9">
-            <!-- apply custom style -->
-            <div class="page-header" style="margin-top:-30px;padding-bottom:0px;">
-            <h1><small>menu1->submenu1</small></h1>
-            </div>
+        <!--フッター -->
+        <div class="row">
+            <div class="col alert alert-info"><center>copy right everything free.</center></div>
         </div>
-        {% block content %}
-        {% endblock %}
     </div>
-
-</div>
-
-<!-- footer -->
-<div id="footer">copy left everything free.</div>
+    <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
 </body>
 </html>

@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+{% extends "waterDropApp/base.html" %}
+{% load staticfiles %}
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-{% if status == "normal" %}
+{% block content %}
+{% if status == "success" %}
 受け付けました
 {% else %}
 入力した文字が不正です
 {% endif %}
+{% endblock %}
 </body>
 </html>

@@ -1,0 +1,80 @@
+<!doctype html>
+{% load staticfiles %}
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>waterDrop</title>
+    <style>
+    #footer{
+    background-color: #aaa;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    color : #fff;
+    margin-top:30px;
+    }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- navbar -->
+    <div class="row">
+        <nav class="navbar navbar-default navbar-fixed-top">
+
+            <div class="navbar-header">
+                <a href="" class="navbar-brand">WaterDrop</a>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="">menu1</a></li>
+                <li><a href="">menu2</a></li>
+                <li><a href="">menu3</a></li>
+                <li><a href="">menu4</a></li>
+            </ul>
+
+        </nav>
+    </div>
+
+    <!-- content -->
+    <div class="row" style="padding:80px 0 0 0">
+
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Menu
+                </div>
+                <!-- <div class="panel-body"> -->
+                <ul class="nav nav-pills nav-stacked" >
+                    <li><a href=""><i class="glyphicon glyphicon-pencil"></i> submenu1</a></li>
+                    <li><a href=""><i class="glyphicon glyphicon-download"></i> submenu2</a></li>
+                    <li><a href=""><i class="glyphicon glyphicon-leaf"></i> submenu3</a></li>
+                    <li><a href=""><i class="glyphicon glyphicon-folder-open"></i> submenu4</a></li>
+                </ul>
+                <!-- </div> -->
+            </div>
+        </div>
+
+        <!-- main -->
+        <div class="col-md-10">
+            <!-- apply custom style -->
+            <div class="page-header" style="margin-top:-30px;padding-bottom:0px;">
+            <h1><small>menu1->submenu1</small></h1>
+            </div>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</div>
+
+<!-- footer -->
+<div id="footer">copy right everything free.</div>
+
+</body>
+</html>
