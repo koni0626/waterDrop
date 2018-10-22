@@ -7,6 +7,8 @@ from . import forms
 from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
+import datetime
+from dateutil.relativedelta import relativedelta
 
 '''
 ログインに関してはここが役に立つ
@@ -34,28 +36,37 @@ def timeCard(request):
     '''表示オンリー'''
     inTime = ""
     offTime = ""
-    try:
-        employee_id = request.user.id
-        '''社員情報の今月のデータを取得する'''
-        nowDate = timezone.localtime()
-        year = nowDate.strftime("%Y")
-        month = nowDate.strftime("%m")
-        day = nowDate.strftime("%d")
-        records = TimeCardTable.objects.filter(employee_id=employee_id, date__year=year, date__month=month)
-        print("きてるよ")
-#        inTime = record.getInTime()[0:5]
-#        offTime = record.getOffTime()[0:5]
-#        if inTime != "None":
-#           offTime = timezone.localtime().strftime("%H:%M")
-    except TimeCardTable.DoesNotExist:
-        '''まだ未入力なので現在時刻を出社時刻に設定する'''
-        inTime = timezone.localtime().strftime("%H:%M")
 
-    form = forms.TimeCardForm(initial={'inTime': inTime, 'offTime': offTime,
-                                       'username': request.user.username,
-                                       'date': nowDate})
+    nowDate = timezone.localtime()
+    year = nowDate.year
+    month = nowDate.month
+    day = nowDate.day
 
-    return render(request, 'waterDropApp/newentry.html', {"form": form, "records":records, "year":year, "month":month})
+    #1か月分のレコードを作成する
+    beginMonthDay = datetime.datetime(year, month, 1)
+    timeCardList = []
+    for d in range(1, 32, 1):
+        print(d)
+        calcDate = beginMonthDay + relativedelta(day=d)
+        calcMonth = calcDate.month
+        if calcMonth != month:
+            break
+
+        try:
+            employee_id = request.user.id
+            #社員情報の今月のデータを取得する
+            record = TimeCardTable.objects.filter(employee_id=employee_id, date__year=calcDate.year, date__month=calcDate.month, date__day=calcDate.day).first()
+            if record != None:
+                print(record)
+                timeCardList.append({'date': "{}/{}/{}".format(calcDate.year, calcDate.month, calcDate.day), 'inTime': record.getInTime(), 'offTime': record.getOffTime()})
+            else:
+                timeCardList.append({'date': "{}/{}/{}".format(calcDate.year, calcDate.month, calcDate.day), 'inTime': '', 'offTime': ''})
+
+        except TimeCardTable.DoesNotExist:
+            #まだ未入力なので現在時刻を出社時刻に設定する
+            print("ない")
+
+    return render(request, 'waterDropApp/newentry.html', {"records":timeCardList, "year":year, "month":month})
 
 '''
 出退勤時間を登録する
