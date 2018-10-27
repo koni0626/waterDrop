@@ -36,6 +36,7 @@ def timeCard(request):
     '''表示オンリー'''
     inTime = ""
     offTime = ""
+    form = forms.TimeCardForm()
 
     nowDate = timezone.localtime()
     year = nowDate.year
@@ -46,9 +47,9 @@ def timeCard(request):
     beginMonthDay = datetime.datetime(year, month, 1)
     timeCardList = []
     for d in range(1, 32, 1):
-        print(d)
         calcDate = beginMonthDay + relativedelta(day=d)
         calcMonth = calcDate.month
+        calcWeekDay = calcDate.weekday()
         if calcMonth != month:
             break
 
@@ -58,15 +59,17 @@ def timeCard(request):
             record = TimeCardTable.objects.filter(employee_id=employee_id, date__year=calcDate.year, date__month=calcDate.month, date__day=calcDate.day).first()
             if record != None:
                 print(record)
-                timeCardList.append({'date': "{}/{}/{}".format(calcDate.year, calcDate.month, calcDate.day), 'inTime': record.getInTime(), 'offTime': record.getOffTime()})
+                timeCardList.append({'date': "{}/{}/{}".format(calcDate.year, calcDate.month, calcDate.day),
+                                     'inTime': record.getInTime(), 'offTime': record.getOffTime(), 'weekDay':calcWeekDay})
             else:
-                timeCardList.append({'date': "{}/{}/{}".format(calcDate.year, calcDate.month, calcDate.day), 'inTime': '', 'offTime': ''})
+                timeCardList.append({'date': "{}/{}/{}".format(calcDate.year, calcDate.month, calcDate.day),
+                                     'inTime': '', 'offTime': '', 'weekDay':calcWeekDay})
 
         except TimeCardTable.DoesNotExist:
             #まだ未入力なので現在時刻を出社時刻に設定する
             print("ない")
 
-    return render(request, 'waterDropApp/newentry.html', {"records":timeCardList, "year":year, "month":month})
+    return render(request, 'waterDropApp/newentry.html', {"records":timeCardList, "year":year, "month":month, "forms":form})
 
 '''
 出退勤時間を登録する

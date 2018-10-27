@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+
 </head>
 <body>
     {% block content %}
+
     <div class="col alert alert-info"><strong>タイムカード {{year}}年{{month}}月分</strong></div>
         <form action="/timeCardEntry/" method="post">
             {%csrf_token%}
@@ -17,20 +20,47 @@
                     <th>退社時刻</th>
                     <th>操作</th>
                 </tr>
-
+                <!--休日は本当はカレンダー情報から引っ張ってくるべき -->
                 {% for record in records %}
+                {% if record.weekDay == 5 %}
+                 <tr class="table-secondary">
+                {% elif record.weekDay == 6 %}
+                 <tr class="table-secondary">
+                {% else %}
                 <tr>
+                {% endif %}
                     <td>
-                    <!--{{form.inTime}}-->
                         {{record.date}}
+                        {% if record.weekDay == 0 %}
+                        (月)
+                        {% elif record.weekDay == 1 %}
+                        (火)
+                        {% elif record.weekDay == 2 %}
+                        (水)
+                        {% elif record.weekDay == 3 %}
+                        (木)
+                        {% elif record.weekDay == 4 %}
+                        (金)
+                        {% elif record.weekDay == 5 %}
+                        (土)
+                        {% else %}
+                        (日)
+                        {% endif %}
                     </td>
                     <td>
                     <!--{{form.inTime}}-->
-                        {{record.inTime}}
+                        {% if record.inTime == '' %}
+                            {{forms.inTime}}
+                        {% else %}
+                            {{record.inTime}}
+                        {% endif %}
                     </td>
                     <td>
-                     <!--{{form.offTime}}-->
-                        {{record.offTime}}
+                        {% if record.offTime == '' %}
+                            {{forms.offTime}}
+                        {% else %}
+                            {{record.offTime}}
+                        {% endif %}
                     </td>
                     <td>
                         <input class="btn btn-info" type="submit" value="登録">
@@ -38,9 +68,6 @@
                 </tr>
                 {% endfor %}
             </table>
-            {{form.username}}
-            {{form.date}}
-
             この画面をリシテアみたいに一カ月分のデータ表示したほうがいいのでは？
             ほんとにタイムカードみたいに表示してしまえばいい。
             現状だと、休みの日とか抜けていることがわからないので、わかるように
