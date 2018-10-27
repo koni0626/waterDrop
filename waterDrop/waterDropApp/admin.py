@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, BuTable, KaTable, CalendarTable, TimeCardTable, WorkCodeTable
 from .models import WorkDetailCodeTable, WorkTable, PriceTable, HolidayKubunTable, User
-from .models import OfficeTable, TransportExpense, HowToMove, ApproveStatus
+from .models import CalendarSettingTable, TransportExpense, HowToMove, ApproveStatus
 
 
 '''社員情報の定義'''
@@ -37,8 +37,8 @@ class CalendarModelAdmin(admin.ModelAdmin):
 
 admin.site.register(CalendarTable, CalendarModelAdmin)
 
-'''オフィスの定義'''
-admin.site.register(OfficeTable)
+'''カレンダー名の定義'''
+admin.site.register(CalendarSettingTable)
 
 admin.site.register(WorkCodeTable)
 

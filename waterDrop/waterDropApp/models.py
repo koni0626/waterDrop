@@ -140,15 +140,23 @@ class HolidayKubunTable(models.Model):
         return self.name
 
 '''
-オフィステーブル
+カレンダー設定テーブル
 '''
-class OfficeTable(models.Model):
+class CalendarSettingTable(models.Model):
     class Meta:
-        verbose_name = "オフィス"
-        verbose_name_plural = "オフィス"
+        verbose_name = "カレンダー基本設定"
+        verbose_name_plural = "カレンダー基本設定"
 
     id = models.BigAutoField(primary_key=True, null=False)
-    name = models.CharField(max_length=32, null=False,verbose_name="オフィス名", help_text="事務所ごとに休日カレンダーを指定できます")
+    name = models.CharField(max_length=32, null=False,verbose_name="カレンダー名", help_text="カレンダーの名前を作成します")
+    choices = ((0, '出勤日'), (1, '休日'))
+    monday =    models.IntegerField(default=0, choices=choices, verbose_name="月曜日")
+    tuesday =   models.IntegerField(default=0, choices=choices, verbose_name="火曜日")
+    wednesday = models.IntegerField(default=0, choices=choices, verbose_name="水曜日")
+    thursday =  models.IntegerField(default=0, choices=choices, verbose_name="木曜日")
+    friday =    models.IntegerField(default=0, choices=choices, verbose_name="金曜日")
+    satday =    models.IntegerField(default=1, choices=choices, verbose_name="土曜日")
+    sunday =    models.IntegerField(default=1, choices=choices, verbose_name="日曜日")
 
     def __str__(self):
         return self.name
@@ -159,11 +167,11 @@ class OfficeTable(models.Model):
 '''
 class CalendarTable(models.Model):
     class Meta:
-        verbose_name = "休日カレンダー"
-        verbose_name_plural = '休日カレンダー'
+        verbose_name = "カレンダー"
+        verbose_name_plural = 'カレンダー'
 
     id = models.BigAutoField(primary_key=True, null=False)
-    name = models.ForeignKey(OfficeTable, on_delete=models.CASCADE, null=False, verbose_name="オフィス名", help_text="カレンダーを適用するオフィスを選択します")
+    name = models.ForeignKey(CalendarSettingTable, on_delete=models.CASCADE, null=False, verbose_name="カレンダー名", help_text="カレンダー名を選択します")
     date = models.DateField( verbose_name="日付", help_text="休日を指定してください", null=True, unique=True)
     Remark = models.CharField(max_length=128, null=True, verbose_name="備考", help_text="祝日名や夏休みなどを記入してください")
     kubunid = models.ForeignKey(HolidayKubunTable, on_delete=models.CASCADE, null=False, verbose_name="休暇区分", help_text="休暇区分を指定します")
