@@ -5,8 +5,9 @@ from django.contrib import admin
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, BuTable, KaTable, CalendarTable, TimeCardTable, WorkCodeTable
-from .models import WorkDetailCodeTable, WorkTable, PriceTable, HolidayKubunTable, User
-from .models import CalendarSettingTable, TransportExpense, HowToMove, ApproveStatus
+from .models import WorkDetailCodeTable, WorkTable, PriceTable, HolidayKindTable, User
+from .models import WorkClassTable, TransportExpense, HowToMove, ApproveStatus
+from .models import PersonalWorkStatusTable
 
 
 '''社員情報の定義'''
@@ -37,8 +38,11 @@ class CalendarModelAdmin(admin.ModelAdmin):
 
 admin.site.register(CalendarTable, CalendarModelAdmin)
 
-'''カレンダー名の定義'''
-admin.site.register(CalendarSettingTable)
+'''個人ステータスの定義'''
+admin.site.register(PersonalWorkStatusTable)
+
+'''勤務区分の定義'''
+admin.site.register(WorkClassTable)
 
 admin.site.register(WorkCodeTable)
 
@@ -57,7 +61,7 @@ class PriceModelAdmin(admin.ModelAdmin):
 admin.site.register(PriceTable, PriceModelAdmin)
 
 '''休暇区分の定義'''
-admin.site.register(HolidayKubunTable)
+admin.site.register(HolidayKindTable)
 
 '''交通手段の定義'''
 admin.site.register(HowToMove)

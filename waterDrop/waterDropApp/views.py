@@ -33,11 +33,13 @@ def login(request):
 '''
 @login_required
 def timeCard(request):
-    '''表示オンリー'''
-    inTime = ""
-    offTime = ""
+    inTime = ""    #出社時間
+    offTime = ""   #退社時間
+
+    #表示用フォーム作成
     form = forms.TimeCardForm()
 
+    #現在時刻取得
     nowDate = timezone.localtime()
     year = nowDate.year
     month = nowDate.month
@@ -51,12 +53,18 @@ def timeCard(request):
         calcMonth = calcDate.month
         calcWeekDay = calcDate.weekday()
         if calcMonth != month:
+            #月が替わるとループを抜ける
             break
 
         try:
+            record = {'date':'', 'inTime':'', 'offTime':'', 'week':'', 'kindHoliday':0}
             employee_id = request.user.id
             #社員情報の今月のデータを取得する
             record = TimeCardTable.objects.filter(employee_id=employee_id, date__year=calcDate.year, date__month=calcDate.month, date__day=calcDate.day).first()
+            #社員に適用されているカレンダー基本設定を取得
+
+            #社員に適用されているカレンダーの詳細設定を取得
+
             if record != None:
                 print(record)
                 timeCardList.append({'date': "{}/{}/{}".format(calcDate.year, calcDate.month, calcDate.day),
