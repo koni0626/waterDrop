@@ -11,6 +11,7 @@ from .models import PersonalWorkStatusTable, BelongsTable
 
 
 '''社員情報の定義'''
+@admin.register(User)
 class UserModelAdmin(UserAdmin):
     #編集はここが参考になる
     #https://qiita.com/okoppe8/items/10ae61808dc3056f9c8e
@@ -33,7 +34,6 @@ class UserModelAdmin(UserAdmin):
         obj.lock = 1
         super().save_model(request, obj, form, change)
 
-admin.site.register(User, UserModelAdmin)
 
 #admin.site.register(User, UserAdmin)
 '''部テーブルの定義'''
