@@ -7,12 +7,31 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, BuTable, KaTable, CalendarTable, TimeCardTable, WorkCodeTable
 from .models import WorkDetailCodeTable, WorkTable, PriceTable, HolidayKindTable, User
 from .models import WorkClassTable, TransportExpense, HowToMove, ApproveStatus
-from .models import PersonalWorkStatusTable
+from .models import PersonalWorkStatusTable, BelongsTable
 
 
 '''社員情報の定義'''
 class UserModelAdmin(UserAdmin):
-    list_display = ('username', 'last_name','first_name', 'kaCode')
+    #編集はここが参考になる
+    #https://qiita.com/okoppe8/items/10ae61808dc3056f9c8e
+    list_display = ('username', 'last_name', 'first_name', 'is_active','lock')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('ユーザ情報', {'fields': ('last_name', 'first_name', 'email', 'is_active', 'lock')}),
+#        ('サイトの権限', {'fields': ('is_active', 'is_staff', 'is_superuser',
+#                                       'groups', 'user_permissions')}),
+        ('データ登録情報', {'fields': ('last_login', 'date_joined')}),
+    )
+
+    '''
+    保存前に呼び出される(継承)
+    '''
+    def save_model(self, request, obj, form, change):
+        print("保存前に呼ばれました")
+        obj.is_active = False
+        obj.count = 0
+        obj.lock = 1
+        super().save_model(request, obj, form, change)
 
 admin.site.register(User, UserModelAdmin)
 
@@ -29,6 +48,11 @@ class KaModelAdmin(admin.ModelAdmin):
 
 admin.site.register(KaTable, KaModelAdmin)
 
+'''所属テーブルの定義'''
+class BelogModelAdmin(admin.ModelAdmin):
+    list_display = ('employee_id', 'kaCode')
+
+admin.site.register(BelongsTable, BelogModelAdmin)
 '''タイムカードの定義'''
 admin.site.register(TimeCardTable)
 

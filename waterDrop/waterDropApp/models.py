@@ -28,8 +28,8 @@ class KaTable(models.Model):
         verbose_name_plural = '課情報'
 
     kaCode = models.AutoField(primary_key=True, verbose_name="課コード", help_text="課コードを入力してください(0001など)")
-    name = models.CharField(max_length=32, null=False, verbose_name="課名", help_text="課名を入力してくっださい")
-    buCode = models.ForeignKey(BuTable, on_delete=models.CASCADE, null=False, verbose_name="所属部門", help_text="課が所属する部コードを選択してください")
+    name = models.CharField(max_length=32, null=False, verbose_name="課名", help_text="課名を入力してください")
+    buCode = models.ForeignKey(BuTable, on_delete=models.CASCADE, null=False, verbose_name="所属部門", help_text="課が所属する部名を選択してください")
     def __str__(self):
         return self.name
 
@@ -41,8 +41,21 @@ class User(AbstractUser):
         verbose_name = "社員情報"
         verbose_name_plural = '社員情報'
 
+    LOCK = ((0, "正常"), (1, "アカウントロック"))
+    lock = models.IntegerField(default=0, verbose_name="アカウントロック", choices=LOCK)
+    errCount = models.IntegerField(default=0, verbose_name="ログイン失敗回数")
 
+'''
+所属テーブル
+'''
+class BelongsTable(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name="所属コード")
+    employee_id = models.ForeignKey(User, on_delete=models.CASCADE, null=False, verbose_name="社員番号")
     kaCode = models.ForeignKey(KaTable, on_delete=models.CASCADE, null=True, verbose_name="課コード", help_text="所属課を選択してください")
+    class Meta:
+        verbose_name = "所属管理"
+        verbose_name_plural = '所属管理'
+        unique_together = (("employee_id", "kaCode"))
 
 '''
 休暇種別テーブル
@@ -226,10 +239,6 @@ class PriceTable(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-
 
 '''
 交通手段

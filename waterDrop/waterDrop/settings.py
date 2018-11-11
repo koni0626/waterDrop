@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Application definition
 
 INSTALLED_APPS = [
@@ -126,7 +126,7 @@ LOGIN_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'waterDropApp.User'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_PORT = 25
 EMAIL_HOST_USER = 'konickcioc@gmail.com'
 EMAIL_HOST_PASSWORD = 'HgN+flSWs6cKR)K?'
 EMAIL_USE_TLS = True
