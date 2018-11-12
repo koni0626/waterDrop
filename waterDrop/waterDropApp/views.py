@@ -110,8 +110,13 @@ def timeCardEntry(request):
 
     return render(request, 'waterDropApp/timecard_entry.html', {"status" : status})
 
-'''メール送信テスト'''
+
 def mail(request):
+    """
+    メール送信テスト
+    :param request:
+    :return:
+    """
     subject = "題名"
     message = "本文\\nです"
     from_email = settings.EMAIL_HOST_USER
@@ -121,3 +126,12 @@ def mail(request):
     print(from_email)
     send_mail(subject, message, from_email, recipient_list)
     return render(request, 'waterDropApp/mail.html')
+
+
+def create_complete(request):
+    """
+    ユーザが本登録されたとき
+    :param request:
+    :return:
+    """
+    print("きた")

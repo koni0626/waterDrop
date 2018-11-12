@@ -10,29 +10,47 @@ from .models import WorkClassTable, TransportExpense, HowToMove, ApproveStatus
 from .models import PersonalWorkStatusTable, BelongsTable
 
 
-'''社員情報の定義'''
 @admin.register(User)
 class UserModelAdmin(UserAdmin):
-    #編集はここが参考になる
-    #https://qiita.com/okoppe8/items/10ae61808dc3056f9c8e
-    list_display = ('username', 'last_name', 'first_name', 'is_active','lock')
+    """
+    社員情報の定義
+    編集はここが参考になる
+    https://qiita.com/okoppe8/items/10ae61808dc3056f9c8e
+    """
+    list_display = ('username', 'last_name', 'first_name', 'is_active', 'lock')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('ユーザ情報', {'fields': ('last_name', 'first_name', 'email', 'is_active', 'lock')}),
-#        ('サイトの権限', {'fields': ('is_active', 'is_staff', 'is_superuser',
-#                                       'groups', 'user_permissions')}),
+        # ('サイトの権限', {'fields': ('is_active', 'is_staff', 'is_superuser',
+        #                                 'groups', 'user_permissions')}),
         ('データ登録情報', {'fields': ('last_login', 'date_joined')}),
     )
 
-    '''
-    保存前に呼び出される(継承)
-    '''
+    """
+    override
+    保存前に呼び出される
+    """
     def save_model(self, request, obj, form, change):
         print("保存前に呼ばれました")
+        # 仮パスワード状態
         obj.is_active = False
         obj.count = 0
-        obj.lock = 1
-        super().save_model(request, obj, form, change)
+        # アンロック
+        obj.lock = 0
+
+        # メールを送信する
+        try:
+            super().save_model(request, obj, form, change)
+            user = obj
+            if user.email != "":
+                # メールを送信する
+                user.email_user("subject", "message", from_email="konishi@basis-corp.jp")
+            else:
+                # ユーザ名とパスワードだけ入力した
+                print("ユーザ名とパスワードだけ")
+        except:
+            print("ユーザ登録でエラーが発生")
+
 
 
 #admin.site.register(User, UserAdmin)

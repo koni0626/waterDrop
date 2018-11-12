@@ -19,10 +19,11 @@ class BuTable(models.Model):
     def __str__(self):
         return self.name
 
-'''
-課テーブル
-'''
+
 class KaTable(models.Model):
+    """
+    課テーブル
+    """
     class Meta:
         verbose_name = "課情報"
         verbose_name_plural = '課情報'
@@ -30,13 +31,15 @@ class KaTable(models.Model):
     kaCode = models.AutoField(primary_key=True, verbose_name="課コード", help_text="課コードを入力してください(0001など)")
     name = models.CharField(max_length=32, null=False, verbose_name="課名", help_text="課名を入力してください")
     buCode = models.ForeignKey(BuTable, on_delete=models.CASCADE, null=False, verbose_name="所属部門", help_text="課が所属する部名を選択してください")
+
     def __str__(self):
         return self.name
 
-'''
-社員テーブル
-'''
+
 class User(AbstractUser):
+    """
+    社員テーブル AbstractじゃなくてUserテーブルがっつりカスタマイズしたほうが良い気がしてきた
+    """
     class Meta:
         verbose_name = "社員情報"
         verbose_name_plural = '社員情報'
@@ -44,6 +47,8 @@ class User(AbstractUser):
     LOCK = ((0, "正常"), (1, "アカウントロック"))
     lock = models.IntegerField(default=0, verbose_name="アカウントロック", choices=LOCK)
     errCount = models.IntegerField(default=0, verbose_name="ログイン失敗回数")
+    # emailはデフォルト省略可能だが，WaterDropは省略不可にする
+    email = models.EmailField('email address', blank=False)
 
 '''
 所属テーブル
