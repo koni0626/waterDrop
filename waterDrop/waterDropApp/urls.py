@@ -11,5 +11,5 @@ urlpatterns = [
     path('timeCardEntry/', views.timeCardEntry, name='timeCardEntry'),
     path('waterDropApp/', views.main, name='main'),
     path('mail/', views.mail, name="mail"),
-    path(r'create_complete/.*', views.create_complete, name='create_complete')
+    path(r'create_complete/', views.create_complete, name='create_complete')
 ]

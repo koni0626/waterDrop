@@ -44,6 +44,7 @@ class UserModelAdmin(UserAdmin):
             user = obj
             if user.email != "":
                 # メールを送信する
+                TEMP_URL = "http://localhost:8000/create_complete000"
                 user.email_user("subject", "message", from_email="konishi@basis-corp.jp")
             else:
                 # ユーザ名とパスワードだけ入力した

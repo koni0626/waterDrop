@@ -134,4 +134,4 @@ def create_complete(request):
     :param request:
     :return:
     """
-    print("きた")
+    return render(request, 'waterDropApp/login.html')
