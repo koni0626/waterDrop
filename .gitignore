@@ -5,3 +5,4 @@ waterDrop/waterDropApp/migrations/__pycache__/
 db.sqlite3
 db.sqlite
 waterDrop/waterDropApp/migrations/
+Pipfile.lock
