@@ -57,19 +57,19 @@ class UserModelAdmin(UserAdmin):
 #admin.site.register(User, UserAdmin)
 '''部テーブルの定義'''
 class BuModelAdmin(admin.ModelAdmin):
-    list_display = ('buCode', 'name')
+    list_display = ('bu_code', 'name')
 
 admin.site.register(BuTable, BuModelAdmin)
 
 '''課テーブルの定義'''
 class KaModelAdmin(admin.ModelAdmin):
-    list_display = ('kaCode', 'name', "buCode")
+    list_display = ('ka_code', 'name', "bu_code")
 
 admin.site.register(KaTable, KaModelAdmin)
 
 '''所属テーブルの定義'''
 class BelogModelAdmin(admin.ModelAdmin):
-    list_display = ('employee_id', 'kaCode')
+    list_display = ('employee_id', 'ka_code')
 
 admin.site.register(BelongsTable, BelogModelAdmin)
 '''タイムカードの定義'''
@@ -77,7 +77,7 @@ admin.site.register(TimeCardTable)
 
 '''カレンダーの定義'''
 class CalendarModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'date', 'Remark', "kubunid")
+    list_display = ('name', 'date', 'remark', "holiday")
 
 admin.site.register(CalendarTable, CalendarModelAdmin)
 
@@ -114,6 +114,6 @@ admin.site.register(ApproveStatus)
 
 '''交通費申請の定義'''
 class TransportModelAdmin(admin.ModelAdmin):
-    list_display = ('date', 'adddate', 'start', 'end', "expense")
+    list_display = ('date', 'entry_date', 'start', 'end', "expense")
 
 admin.site.register(TransportExpense, TransportModelAdmin)

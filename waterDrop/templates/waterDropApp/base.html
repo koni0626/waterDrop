@@ -19,7 +19,21 @@
         <!--ヘッダー -->
         <div class="row">
             <div class="col alert alert-primary">
-                <h1>WaterDrop</h1>出退勤管理システム
+                <h1>WaterDrop</h1>
+                <table class="col" border="0">
+                    <tr>
+                        <td>
+                            出退勤管理システム
+                        </td>
+                        <td align="right" valign="bottom">
+                            {% if user.is_authenticated %}
+                                ようこそ {{ user.get_username }}.
+                                {% else %}
+                                 Welcome, new user. Please log in.
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
         <!--メニュー -->
@@ -27,15 +41,15 @@
             <div class="col-3">
                 <ul class="list-group">
                     <li class="list-group-item list-group-item-action list-group-item-primary">メニュー</li>
-                    <li class="list-group-item list-group-item-action"><a href="">タイムカード</a></li>
+                    <li class="list-group-item list-group-item-action"><a href="/time_card/disp">タイムカード</a></li>
                     <li class="list-group-item list-group-item-action">出退勤一覧</li>
                     <li class="list-group-item list-group-item-action">カレンダー</li>
                     <li class="list-group-item list-group-item-action">交通費申請</li>
                     <li class="list-group-item list-group-item-action">年末調整</li>
-                    <li class="list-group-item list-group-item-action"><a href="./admin">ログイン</a></li>
-                    <li class="list-group-item list-group-item-action"><a href="./admin/logout/">ログアウト</a></li>
-                    <li class="list-group-item list-group-item-action"><a href="./admin">管理画面</a></li>
-                    <li class="list-group-item list-group-item-action"><a href="./admin">マニュアル</a></li>
+                    <li class="list-group-item list-group-item-action"><a href="/admin">ログイン</a></li>
+                    <li class="list-group-item list-group-item-action"><a href="/admin/logout/">ログアウト</a></li>
+                    <li class="list-group-item list-group-item-action"><a href="/admin">管理画面</a></li>
+                    <li class="list-group-item list-group-item-action"><a href="/admin">マニュアル</a></li>
                 </ul>
                 <br>
             </div>

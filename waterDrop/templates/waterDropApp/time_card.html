@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% extends "waterDropApp/base.html" %}
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+    {% block content %}
+    <div class="col alert alert-primary"><strong>タイムカード {{year}}年{{month}}月分</strong></div>
+            <table class="table table-hover">
+                <tr>
+                    <th>日時</th>
+                    <th>出社時刻</th>
+                    <th>退社時刻</th>
+                    <th>勤務区分</th>
+                    <th>登録</th>
+                    <th>作業内容</th>
+                </tr>
+                <!--休日は本当はカレンダー情報から引っ張ってくるべき -->
+                {% for record in records %}
+                <tr>
+                    <form action="/time_card/entry" method="post">
+                    {%csrf_token%}
+                        <td>
+                            {% if record.disp_week == '(土)' or record.disp_week == '(日)' %}
+                                <p class="text-danger">{{record.disp_date}}{{record.disp_week}}</p>
+                            {% else %}
+                                <p>{{record.disp_date}}{{record.disp_week}}</p>
+                            {% endif %}
+
+                        </td>
+                        <td>
+                        <!--{{form.inTime}}-->
+                            {{record.form.in_time}}
+                        </td>
+                        <td>
+                            {{record.form.off_time}}
+                        </td>
+                        <td>
+                            {{record.form.work_class}}
+                        </td>
+                        <td>
+                            {{record.form.date}}
+                            <input class="btn btn-primary" type="submit" name="add" value="登録">
+                    </form>
+                        </td>
+                        <td>
+                            <form action="/work_content/" method="post">
+                                {%csrf_token%}
+                                <input class="btn btn-secondary" type="button" name="edit" value="作業内容" onclick="window.open('/work_content/{{record.hidden_date}}')">
+                            </form>
+                        </td>
+                </tr>
+                {% endfor %}
+            </table>
+            この画面をリシテアみたいに一カ月分のデータ表示したほうがいいのでは？
+            ほんとにタイムカードみたいに表示してしまえばいい。
+            現状だと、休みの日とか抜けていることがわからないので、わかるように
+            1か月分まとめて出したほうが良い。<br>
+            休日は薄いピンクとかの改良も必要<br>
+    {% endblock %}
+</body>
+</html>

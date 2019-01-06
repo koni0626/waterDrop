@@ -6,9 +6,9 @@ admin.site.site_header = 'ウォータードロップ'
 admin.site.index_title = 'メニュー'
 
 urlpatterns = [
-    path('', views.timeCard, name='timeCard'),
-    path('timeCard/', views.timeCard, name='timeCard'),
-    path('timeCardEntry/', views.timeCardEntry, name='timeCardEntry'),
+    path('', views.main, name='main'),
+    path('time_card/<str:code>', views.time_card, name='time_card'),
+    path('work_content/<str:date>', views.work_content, name='work_content'),
     path('waterDropApp/', views.main, name='main'),
     path('mail/', views.mail, name="mail"),
     path(r'create_complete/', views.create_complete, name='create_complete')
