@@ -5,10 +5,35 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-
 </head>
 <body>
     {% block content %}
+    <script type="text/javascript">
+    var location_data = null;
+    function get_location()
+    {
+        if (navigator.geolocation) {
+            // 現在の位置情報取得を実施
+            navigator.geolocation.getCurrentPosition(
+            // 位置情報取得成功時
+            function (pos) {
+                    location_data ="<li>"+"緯度：" + pos.coords.latitude + "</li>";
+                    location_data += "<li>"+"経度：" + pos.coords.longitude + "</li>";
+                    document.getElementById("location").innerHTML = lll;
+            },
+            // 位置情報取得失敗時
+            function (pos) {
+                    location_data ="<li>位置情報が取得できませんでした。</li>";
+                    document.getElementById("location").innerHTML = location_data;
+            });
+        } else {
+            window.alert("本ブラウザではGeolocationが使えません");
+        }
+    }
+    </script>
+    {% if location_op == "1" %}
+        <script type="text/javascript">get_location();</script>
+    {% endif %}
     <div class="col alert alert-primary"><strong>タイムカード {{year}}年{{month}}月分</strong></div>
             <table class="table table-hover">
                 <tr>
@@ -22,7 +47,7 @@
                 <!--休日は本当はカレンダー情報から引っ張ってくるべき -->
                 {% for record in records %}
                 <tr>
-                    <form action="/time_card/entry" method="post">
+                    <form action="/time_card/update" method="post">
                     {%csrf_token%}
                         <td>
                             {% if record.disp_week == '(土)' or record.disp_week == '(日)' %}
@@ -30,7 +55,6 @@
                             {% else %}
                                 <p>{{record.disp_date}}{{record.disp_week}}</p>
                             {% endif %}
-
                         </td>
                         <td>
                         <!--{{form.inTime}}-->
@@ -44,23 +68,22 @@
                         </td>
                         <td>
                             {{record.form.date}}
+                            <!--
+                            https://itsakura.com/jquery-hiddenが参考になる
+                            -->
+                            <input type="hidden" name="lat" value="1111">
                             <input class="btn btn-primary" type="submit" name="add" value="登録">
                     </form>
                         </td>
                         <td>
                             <form action="/work_content/" method="post">
                                 {%csrf_token%}
-                                <input class="btn btn-secondary" type="button" name="edit" value="作業内容" onclick="window.open('/work_content/{{record.hidden_date}}')">
+                                <input class="btn btn-secondary" type="button" name="edit" value="作業内容" onclick="window.open('/work_content/disp/{{record.hidden_date}}')">
                             </form>
                         </td>
                 </tr>
                 {% endfor %}
             </table>
-            この画面をリシテアみたいに一カ月分のデータ表示したほうがいいのでは？
-            ほんとにタイムカードみたいに表示してしまえばいい。
-            現状だと、休みの日とか抜けていることがわからないので、わかるように
-            1か月分まとめて出したほうが良い。<br>
-            休日は薄いピンクとかの改良も必要<br>
     {% endblock %}
 </body>
 </html>

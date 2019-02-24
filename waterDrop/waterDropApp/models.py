@@ -114,6 +114,7 @@ class WorkClassTable(models.Model):
     id = models.BigAutoField(primary_key=True, null=False)
 
     name = models.CharField(max_length=32, null=False,
+                            unique=True,
                             verbose_name="勤務区分名",
                             help_text="一週間単位の出勤日，退勤日を設定します。祝日に関してはカレンダーで設定します")
 
@@ -245,6 +246,13 @@ class TimeCardTable(models.Model):
                                         null=True,
                                         verbose_name="出勤のステータスを選択")
 
+    lat = models.FloatField(default=0.0,
+                            verbose_name="緯度")
+
+    longi = models.FloatField(default=0.0,
+                              verbose_name="経度")
+
+
     def __str__(self):
         return str(self.date)
 
@@ -265,6 +273,9 @@ class WorkCodeTable(models.Model):
     name = models.CharField(max_length=128,
                             verbose_name="作業内容")
 
+    def __str__(self):
+        return self.name
+
 
 class WorkDetailCodeTable(models.Model):
     """
@@ -283,7 +294,7 @@ class WorkDetailCodeTable(models.Model):
                                 verbose_name="作業内容の説明")
 
     def __str__(self):
-        return self.work_detail_code
+        return self.contents
 
 
 class WorkTable(models.Model):
@@ -303,6 +314,9 @@ class WorkTable(models.Model):
     work_detail_code = models.ForeignKey(WorkDetailCodeTable, on_delete=models.CASCADE, null=False)
 
     work_time = models.FloatField()
+
+    def __str__(self):
+        return self.work_code
 
 
 class PriceTable(models.Model):
@@ -395,3 +409,23 @@ class TransportExpense(models.Model):
     def __str__(self):
         return str(self.date)
 
+
+class OptionTable(models.Model):
+    """
+    オプションテーブル
+    """
+    class Meta:
+        verbose_name = "オプション"
+        verbose_name_plural = "オプション"
+
+    id = models.BigAutoField(primary_key=True)
+
+    name = models.CharField(max_length=256,
+                            verbose_name="オプション名")
+
+    value = models.CharField(max_length=256,
+                             verbose_name="値")
+
+    RANGE = ((0, "非公開"), (1, "公開"))
+    public = models.IntegerField(choices=RANGE,
+                                 verbose_name="公開／非公開")

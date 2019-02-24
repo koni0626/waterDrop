@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, BuTable, KaTable, CalendarTable, TimeCardTable, WorkCodeTable
 from .models import WorkDetailCodeTable, WorkTable, PriceTable, HolidayKindTable, User
 from .models import WorkClassTable, TransportExpense, HowToMove, ApproveStatus
-from .models import PersonalWorkStatusTable, BelongsTable
+from .models import PersonalWorkStatusTable, BelongsTable, OptionTable
 
 
 @admin.register(User)
@@ -53,67 +53,90 @@ class UserModelAdmin(UserAdmin):
             print("ユーザ登録でエラーが発生")
 
 
-
-#admin.site.register(User, UserAdmin)
-'''部テーブルの定義'''
 class BuModelAdmin(admin.ModelAdmin):
+    # 部テーブルの定義
     list_display = ('bu_code', 'name')
+
 
 admin.site.register(BuTable, BuModelAdmin)
 
-'''課テーブルの定義'''
+
+# 課テーブルの定義
 class KaModelAdmin(admin.ModelAdmin):
     list_display = ('ka_code', 'name', "bu_code")
 
+
 admin.site.register(KaTable, KaModelAdmin)
 
-'''所属テーブルの定義'''
+
+# 所属テーブルの定義
 class BelogModelAdmin(admin.ModelAdmin):
     list_display = ('employee_id', 'ka_code')
 
+
 admin.site.register(BelongsTable, BelogModelAdmin)
-'''タイムカードの定義'''
+
+
+# タイムカードの定義
 admin.site.register(TimeCardTable)
 
-'''カレンダーの定義'''
+
+# カレンダーの定義
 class CalendarModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'date', 'remark', "holiday")
 
+
 admin.site.register(CalendarTable, CalendarModelAdmin)
 
-'''個人ステータスの定義'''
+
+# 個人ステータスの定義
 admin.site.register(PersonalWorkStatusTable)
 
-'''勤務区分の定義'''
+
+# 勤務区分の定義
 admin.site.register(WorkClassTable)
 
+
+# 作業コードの定義
 admin.site.register(WorkCodeTable)
 
-'''作業内容の定義'''
+
 class WorkDetailCodeModelAdmin(admin.ModelAdmin):
+    # 作業内容の定義
     list_display = ('work_detail_code', 'contents')
+
 
 admin.site.register(WorkDetailCodeTable, WorkDetailCodeModelAdmin)
 
+
+# ワークテーブルの定義
 admin.site.register(WorkTable)
 
-'''単価の定義'''
+
 class PriceModelAdmin(admin.ModelAdmin):
+    # 単価の定義
     list_display = ('name', 'tanka')
+
 
 admin.site.register(PriceTable, PriceModelAdmin)
 
-'''休暇区分の定義'''
+# 休暇区分の定義
 admin.site.register(HolidayKindTable)
 
-'''交通手段の定義'''
+# 交通手段の定義
 admin.site.register(HowToMove)
 
-'''審査承認ステータスの定義'''
+# 審査承認ステータスの定義
 admin.site.register(ApproveStatus)
 
-'''交通費申請の定義'''
+
 class TransportModelAdmin(admin.ModelAdmin):
+    # 交通費申請の定義
     list_display = ('date', 'entry_date', 'start', 'end', "expense")
 
+
 admin.site.register(TransportExpense, TransportModelAdmin)
+
+
+# オプションテーブル
+admin.site.register(OptionTable)

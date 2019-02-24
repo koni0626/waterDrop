@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import TimeCardTable, WorkClassTable, User
+
+from . import models
 from . import forms
 from django.utils import timezone
 import datetime
@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from . import utils
 
 
-def display_time_card(request):
+def display(request):
     in_time = ""    # 出社時間
     off_time = ""   # 退社時間
     # 現在時刻取得
@@ -32,9 +32,9 @@ def display_time_card(request):
         try:
             # 表示用フォーム作成
             record = {'date': '', 'inTime': '', 'offTime': '', 'week': '', 'kindHoliday': 0}
-            employee = User.objects.get(id=request.user.id)
+            employee = models.User.objects.get(id=request.user.id)
             # 社員情報の今月のデータを取得する
-            record = TimeCardTable.objects.get(employee=employee,
+            record = models.TimeCardTable.objects.get(employee=employee,
                                                date__year=calc_date.year,
                                                date__month=calc_date.month,
                                                date__day=calc_date.day)
@@ -45,7 +45,7 @@ def display_time_card(request):
                                                'off_time': record.off_time,
                                                'date': utils.get_hyphen_date(calc_date),
                                                'work_class': record.work_class.id})
-        except TimeCardTable.DoesNotExist:
+        except models.TimeCardTable.DoesNotExist:
             form = forms.TimeCardForm(initial={'in_time': '',
                                                'off_time': '',
                                                'date': utils.get_hyphen_date(calc_date)})
@@ -56,14 +56,12 @@ def display_time_card(request):
                                'hidden_week': calc_week,
                                'form': form})
 
-    return render(request,
-                  'waterDropApp/time_card.html',
-                  {'records': time_card_list,
+    return {'records': time_card_list,
                    'year': year,
-                   'month': month})
+                   'month': month}
 
 
-def entry_time_card(request):
+def update(request):
     """
     出退勤時間を登録する
     """
@@ -76,32 +74,35 @@ def entry_time_card(request):
         form = forms.TimeCardForm(request.POST)
         if form.is_valid():
             '''ユーザテーブルからユーザIDを取得する'''
-            employee = User.objects.get(id=request.user.id)
-
+            employee = models.User.objects.get(id=request.user.id)
+            print("=================================")
             try:
                 '''日付とユーザIDからタイムカードの主キーを取得する'''
-                pk = TimeCardTable.objects.get(date=form.cleaned_data['date'], employee=employee)
-                work_class = WorkClassTable.objects.get(id=form.cleaned_data['work_class'])
-                TimeCardTable(id=pk.id,
-                              employee=employee,
-                              date=form.cleaned_data['date'],
-                              in_time=form.cleaned_data['in_time'],
-                              off_time=form.cleaned_data['off_time'],
-                              work_class=work_class).save()
-            except TimeCardTable.DoesNotExist as e:
-                work_class = WorkClassTable.objects.get(id=form.cleaned_data['work_class'])
-                TimeCardTable(
-                              employee=employee,
-                              date=form.cleaned_data['date'],
-                              in_time=form.cleaned_data['in_time'],
-                              off_time=form.cleaned_data['off_time'],
-                              work_class=work_class).save()
+                pk = models.TimeCardTable.objects.get(date=form.cleaned_data['date'], employee=employee)
+                work_class = models.WorkClassTable.objects.get(name=form.cleaned_data['work_class'])
+                print(work_class)
+                models.TimeCardTable(id=pk.id,
+                                     employee=employee,
+                                     date=form.cleaned_data['date'],
+                                     in_time=form.cleaned_data['in_time'],
+                                     off_time=form.cleaned_data['off_time'],
+                                     work_class=work_class).save()
+            except models.TimeCardTable.DoesNotExist as e:
+                print("こっちだよ")
+                print(form.cleaned_data['work_class'])
+                work_class = models.WorkClassTable.objects.get(name=form.cleaned_data['work_class'])
+                print(form.cleaned_data['work_class'])
+                models.TimeCardTable(
+                                     employee=employee,
+                                     date=form.cleaned_data['date'],
+                                     in_time=form.cleaned_data['in_time'],
+                                     off_time=form.cleaned_data['off_time'],
+                                     work_class=work_class).save()
 
-        else:
-            '''データの形式が不正'''
-            print("entry error")
-            print(form.errors)
-            status = "error"
+#        else:
+#            '''データの形式が不正'''
+#            print("entry error")
+ #           print(form.errors)
+#            status = "error"
 
     # return render(request, 'waterDropApp/timecard_entry.html', {"status" : status})
-    return HttpResponseRedirect("/time_card/disp")

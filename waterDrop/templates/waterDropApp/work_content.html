@@ -9,40 +9,23 @@
 </head>
 <body>
     {% block content %}
-    <div class="col alert alert-secondary"><strong>勤務時間</strong></div>
-    <table class="col-4">
-        <tr>
-            <td><p>出勤時刻</p></td>
-            <td><p>{{time_card_record.in_time}}</p></td>
-            <td><p>退勤時刻</p></td>
-            <td><p>{{time_card_record.off_time}}</p></td>
-        </tr>
-    </table>
-    <div class="col alert alert-secondary"><strong>勤務区分</strong></div>
-    <p>{{time_card_record.work_class}}</p>
-    <div class="col alert alert-secondary"><strong>休暇区分</strong></div>
-    <p>{{form}}</p>
-    <div class="col alert alert-secondary"><strong>休憩時刻</strong></div>
-    何時から何時まで休憩かとか思ったけどいらねーな。ここから上は全部。
-
-    <div class="col alert alert-secondary"><strong>作業内容</strong></div>
-    <table class="col-4 table table-hover">
-        <tr>
-            <th>作業コード</th>
-            <th>作業時間</th>
-        </tr>
-        <tr>
-            <td>コーディング</td>
-            <td>3:00</td>
-        </tr>
-        <tr>
-            <td>基本設計</td>
-            <td>3:00</td>
-        </tr>
-    </table>
-
-
-
+    <div class="col alert alert-secondary"><strong>作業内容  {{date}}</strong></div>
+    <form action="/work_content/edit/{{date}}" method="post">
+        <table class="col-4 table table-hover">
+            <tr>
+                <th>作業コード</th>
+                <th>作業時間</th>
+            </tr>
+            {% for form in work_table_forms %}
+            {%csrf_token%}
+            <tr>
+                <td><p>{{form.work_detail_code}}</p></td>
+                <td><p>{{form.work_time}}</p></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input class="btn btn-secondary" type="submit" name="edit" value="登録">
+    </form>
     {% endblock %}
 </body>
 </html>

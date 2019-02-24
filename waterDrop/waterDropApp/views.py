@@ -1,16 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import TimeCardTable, WorkClassTable, User
 from django.contrib.auth.decorators import login_required
-from . import forms
-from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
-import datetime
-from dateutil.relativedelta import relativedelta
-from . import utils
 from . import time_card_controller
-
+from . import work_content_controller
+from . import models
+from django.http import HttpResponse, HttpResponseRedirect
 '''
 ログインに関してはここが役に立つ
 https://it-engineer-lab.com/archives/544
@@ -22,11 +17,13 @@ def main(request):
 
     return render(request, 'waterDropApp/index.html')
 
-'''
-ログイン画面表示
-'''
+
 def login(request):
-    print("hello login")
+    """
+    ログイン画面表示
+    :param request:
+    :return:
+    """
     return render(request, 'waterDropApp/login.html',{})
 
 
@@ -38,33 +35,35 @@ def time_card(request, code):
     :param code:
     :return:
     """
+    # パラメーター読み込み
+    location_op = models.OptionTable.objects.get(name="get_location")
+
     if code == 'disp':
-        return time_card_controller.display_time_card(request)
-    elif code == 'entry':
-        return time_card_controller.entry_time_card(request)
+        response = time_card_controller.display(request)
+        response["location_op"] = location_op.value
+        return render(request,
+                      'waterDropApp/time_card.html',
+                      response)
+
+    elif code == 'update':
+        print(request.POST["lat"])
+        time_card_controller.update(request)
+        return HttpResponseRedirect("/time_card/disp")
 
 
 @login_required
-def work_content(request, date):
+def work_content(request, code, date):
     """
     作業内容表示
     :param request:
     :param date: 作業内容を表示する日時
     :return:
     """
-    try:
-        form = forms.WorkContentsForm()
-        '''日付とユーザIDからタイムカードの主キーを取得する'''
-        employee = User.objects.get(id=request.user.id)
-        time_card_record = TimeCardTable.objects.get(date=date, employee=employee)
-        form = forms.WorkContentsForm()
-
-    except TimeCardTable.DoesNotExist as e:
-        pass
-
-    return render(request, 'waterDropApp/work_content.html',
-                  {'time_card_record': time_card_record,
-                   'form': form})
+    # コントローラーは継承で作ったほうがよいか？
+    if code == 'disp':
+        return work_content_controller.display(request, date)
+    elif code == 'update':
+        return work_content_controller.update(request, date)
 
 
 def mail(request):
